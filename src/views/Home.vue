@@ -330,16 +330,21 @@ export default {
       });
     },
     async getPayments() {
-      let pageLimit = 2;
+      let pageLimit = 20;
+      let endOfResults = false;
       let url = this.getPaymentsApiUrl();
 
-      for (let i = 0; i < pageLimit; i++) {
+      for (let i = 0; i < pageLimit && !endOfResults; i++) {
         let currUrl = url + "?page=" + i + "&limit=10";
         await this.axios.get(currUrl).then((response) => {
           let payments = response.data._embedded.records;
 
           //set payment results
           this.payments = this.payments.concat(payments);
+
+          if (payments.length == 0) {
+            endOfResults = true;
+          }
 
           //experiment: if not curr account, get payments for that account
           // payments.forEach((payment) => {
