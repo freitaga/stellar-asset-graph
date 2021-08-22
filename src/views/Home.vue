@@ -10,7 +10,7 @@
             v-model="account"
             class="mr-2"
           ></v-text-field>
-          <v-btn text @click="setupScene" color="primary"
+          <v-btn text @click="setupScene(true)" color="primary"
             ><v-icon>mdi-magnify</v-icon> Search</v-btn
           >
           <v-btn-toggle v-model="network" tile color="primary" group>
@@ -41,7 +41,12 @@
             </v-btn-toggle>
           </div>
         </div>
-        <v-btn depressed @click="clearGraphData">Clear Graph</v-btn>
+        <v-btn depressed @click="clearGraphData" class="mr-3"
+          >Clear Graph</v-btn
+        >
+        <v-btn depressed :disabled="endOfResults" @click="setupScene(false)"
+          >Grab More Payments</v-btn
+        >
       </v-col>
       <v-col cols="12">
         <div id="graph"></div>
@@ -59,7 +64,7 @@ export default {
   components: {},
   async created() {
     //get 1 layer of payments
-    await this.setupScene();
+    //await this.setupScene();
   },
   data() {
     return {
@@ -78,160 +83,21 @@ export default {
       controls: null,
       gui: null,
       NODE_REL_SIZE: 1,
-      mockAssetData: {
-        _links: {
-          self: {
-            href: "/explorer/testnet/asset/ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ/history/payments?skip=0&order=desc&limit=100",
-          },
-          prev: {
-            href: "/explorer/testnet/asset/ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ/history/payments?skip=0&order=asc&limit=100&cursor=1804152552304641",
-          },
-          next: {
-            href: "/explorer/testnet/asset/ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ/history/payments?skip=0&order=desc&limit=100&cursor=1377056709419010",
-          },
-        },
-        _embedded: {
-          records: [
-            {
-              id: "1804152552304641",
-              paging_token: "1804152552304641",
-              type: 1,
-              ts: 1626042320,
-              accounts: [
-                "GAPII7YH4UQKYHTIGZW6US7SRSGNEZUK75FN4Z6HIFZTMGZN5AQ27RO7",
-                "GC5VQLGFQQZKKXH6ZRLTYZSDYGMR2PFMVGEXIPDBWLD2EE4DAVGT7X4Q",
-              ],
-              ledger: 420062,
-              tx: "1804152552304640",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "100000",
-            },
-            {
-              id: "1803645746159617",
-              paging_token: "1803645746159617",
-              type: 1,
-              ts: 1626041692,
-              accounts: [
-                "GACS2IOWSCR73YVSCBFVWADP65SQFWBXWQQSA4UYUJ5PE2PUXYMT3LR4",
-                "GAPII7YH4UQKYHTIGZW6US7SRSGNEZUK75FN4Z6HIFZTMGZN5AQ27RO7",
-              ],
-              ledger: 419944,
-              tx: "1803645746159616",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "100000",
-            },
-            {
-              id: "1803439587725313",
-              paging_token: "1803439587725313",
-              type: 1,
-              ts: 1626041438,
-              accounts: [
-                "GC3CAPCDFMDS7GGAFQBORNR4VDMWH6POR5TVLJ6Y5DVJIIKR6AIXKDV7",
-                "GACS2IOWSCR73YVSCBFVWADP65SQFWBXWQQSA4UYUJ5PE2PUXYMT3LR4",
-              ],
-              ledger: 419896,
-              tx: "1803439587725312",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "150000",
-            },
-            {
-              id: "1803340803481601",
-              paging_token: "1803340803481601",
-              type: 1,
-              ts: 1626041317,
-              accounts: [
-                "GAFUNCUORZ2P7QGXPY2C6Q77P3BPLJ4MJ27SSLWZ7GOTFFC2XR4O667K",
-                "GAWI566FEMZIM5Y4AD3XHXS2667OO4BL4CGHXE7CK433LZCWLC33QZ4G",
-              ],
-              ledger: 419873,
-              tx: "1803340803481600",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "150000",
-            },
-            {
-              id: "1377653709873154",
-              paging_token: "1377653709873154",
-              type: 1,
-              ts: 1625520487,
-              accounts: [
-                "GC2PPHHCKJEU3ZFOPACXTFJINQLSCN57W4OWHC4FFE6JAU2RCIOYNXQC",
-                "GAFUNCUORZ2P7QGXPY2C6Q77P3BPLJ4MJ27SSLWZ7GOTFFC2XR4O667K",
-              ],
-              ledger: 320760,
-              tx: "1377653709873152",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "500000",
-            },
-            {
-              id: "1377589285380098",
-              paging_token: "1377589285380098",
-              type: 1,
-              ts: 1625520410,
-              accounts: [
-                "GC2PPHHCKJEU3ZFOPACXTFJINQLSCN57W4OWHC4FFE6JAU2RCIOYNXQC",
-                "GC3CAPCDFMDS7GGAFQBORNR4VDMWH6POR5TVLJ6Y5DVJIIKR6AIXKDV7",
-              ],
-              ledger: 320745,
-              tx: "1377589285380096",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "250000",
-            },
-            {
-              id: "1377503386021890",
-              paging_token: "1377503386021890",
-              type: 1,
-              ts: 1625520305,
-              accounts: [
-                "GC2PPHHCKJEU3ZFOPACXTFJINQLSCN57W4OWHC4FFE6JAU2RCIOYNXQC",
-                "GD7KC4Z4QD6GQD4RTIMO6HNOODOVIDPUKASDOAXMUDY56AGVHEQQSPJY",
-              ],
-              ledger: 320725,
-              tx: "1377503386021888",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "150000",
-            },
-            {
-              id: "1377056709419010",
-              paging_token: "1377056709419010",
-              type: 1,
-              ts: 1625519755,
-              accounts: [
-                "GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ",
-                "GC2PPHHCKJEU3ZFOPACXTFJINQLSCN57W4OWHC4FFE6JAU2RCIOYNXQC",
-              ],
-              ledger: 320621,
-              tx: "1377056709419008",
-              assets: [
-                "ESVTFR-GCJXBG5QKPTBQUFJC6GEWK72YCMVMCVT2QL7XUJ55DWHCUS7HWQZHOKJ-2",
-              ],
-              amount: "1000000",
-            },
-          ],
-        },
-      },
+      nextPageUrl: null,
+      page: 0,
+      pageLimit: 10,
+      endOfResults: true,
     };
   },
   methods: {
-    async setupScene() {
+    async setupScene(clearData) {
       //clear nodes/links
-      if (this.graph) {
+      if (clearData) {
         this.clearGraphData();
+        this.getAccountData();
       }
-      this.getAccountData();
+      this.destroyGraph();
+
       await this.getPayments();
       //this.parseAssetData();
       this.setGraphData();
@@ -246,6 +112,10 @@ export default {
       this.links = [];
       this.payments = [];
       this.asset = null;
+      this.endOfResults = false;
+      this.page = 0;
+    },
+    async destroyGraph() {
       await this.graph?._destructor();
     },
     createGraph() {
@@ -321,6 +191,10 @@ export default {
       // this.nodes.push(n2);
       // this.links.push(l);
     },
+    async appendPayments() {
+      await this.getPayments();
+      this.setGraphData();
+    },
     async getAccountData() {
       let url = this.getAccountApiUrl();
 
@@ -330,20 +204,33 @@ export default {
       });
     },
     async getPayments() {
-      let pageLimit = 20;
-      let endOfResults = false;
+      this.endOfResults = false;
+      let page = this.page;
+      this.pageLimit += page;
       let url = this.getPaymentsApiUrl();
+      if (!this.nextPageUrl) {
+        this.nextPageUrl = url + "?limit=10" + "&order=asc";
+      }
 
-      for (let i = 0; i < pageLimit && !endOfResults; i++) {
-        let currUrl = url + "?page=" + i + "&limit=10";
-        await this.axios.get(currUrl).then((response) => {
+      for (let i = page; i < this.pageLimit && !this.endOfResults; i++) {
+        await this.axios.get(this.nextPageUrl).then((response) => {
           let payments = response.data._embedded.records;
+          this.nextPageUrl = response.data._links.next.href;
 
-          //set payment results
-          this.payments = this.payments.concat(payments);
-
-          if (payments.length == 0) {
-            endOfResults = true;
+          //console.log("existing payments: ", this.payments);
+          //console.log("new payments: ", payments);
+          // console.log(
+          //   "duplicate payments ",
+          //   this._.intersectionBy(payments, this.payments, "transaction_hash")
+          // );
+          if (
+            this._.intersectionBy(payments, this.payments, "transaction_hash")
+              .length > 0
+          ) {
+            this.endOfResults = true;
+          } else {
+            //set payment results
+            this.payments = this.payments.concat(payments);
           }
 
           //experiment: if not curr account, get payments for that account
