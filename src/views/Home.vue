@@ -120,6 +120,7 @@ export default {
       this.asset = null;
       this.endOfResults = false;
       this.page = 0;
+      this.nextPageUrl = null;
     },
     async destroyGraph() {
       await this.graph?._destructor();
@@ -245,15 +246,29 @@ export default {
         });
       }
     },
-    getPaymentsByAsset(asset) {
+    async getPaymentsByAsset(asset) {
+      this.clearGraphData();
       let url = this.getPaymentsUrlByAsset(asset);
 
-      this.axios.get(url).then((response) => {
-        this.clearGraphData();
-        this.payments = response.data._embedded.records;
-        this.parseAssetData();
-        this.createGraph();
-      });
+      for (let i = 0; i < this.pageLimit && !this.endOfResults; i++) {
+        if (this.nextPageUrl) {
+          url = this.nextPageUrl;
+        }
+        console.log(url);
+        await this.axios.get(url).then((response) => {
+          let payments = response.data._embedded.records;
+          if (payments.length == 0) {
+            this.endOfResults = true;
+          } else {
+            this.payments = this.payments.concat(payments);
+            console.log(response.data._links.next.href);
+            this.nextPageUrl =
+              "https://api.stellar.expert" + response.data._links.next.href;
+          }
+        });
+      }
+      this.parseAssetData();
+      this.createGraph();
     },
     parseAssetData() {
       //set data nodes & links
