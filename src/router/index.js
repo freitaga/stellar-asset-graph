@@ -11,6 +11,12 @@ const routes = [
     component: Home,
   },
   {
+    path: "/asset-flow",
+    name: "AssetFlow",
+    component: () =>
+      import(/* webpackChunkName: "assetFlow" */ "../views/AssetFlow.vue"),
+  },
+  {
     path: "/about",
     name: "About",
     // route level code-splitting

@@ -40,6 +40,12 @@
               </v-btn>
             </v-btn-toggle>
           </div>
+          <div class="ml-3">
+            <div class="caption">Total Payments</div>
+            <div>
+              {{ payments.length }}
+            </div>
+          </div>
         </div>
         <v-btn depressed @click="clearGraphData" class="mr-3"
           >Clear Graph</v-btn
@@ -217,16 +223,13 @@ export default {
           let payments = response.data._embedded.records;
           this.nextPageUrl = response.data._links.next.href;
 
-          //console.log("existing payments: ", this.payments);
-          //console.log("new payments: ", payments);
+          // console.log("existing payments: ", this.payments);
+          // console.log("new payments: ", payments);
           // console.log(
           //   "duplicate payments ",
           //   this._.intersectionBy(payments, this.payments, "transaction_hash")
           // );
-          if (
-            this._.intersectionBy(payments, this.payments, "transaction_hash")
-              .length > 0
-          ) {
+          if (payments.length == 0) {
             this.endOfResults = true;
           } else {
             //set payment results
