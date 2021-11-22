@@ -9,7 +9,10 @@ import VueAxios from 'vue-axios'
 
 import VueLodash from 'vue-lodash'
 import lodash from 'lodash'
+import VueGoogleCharts from 'vue-google-charts'
 
+Vue.use(require('vue-moment'));
+Vue.use(VueGoogleCharts)
 Vue.use(VueAxios, axios)
 Vue.use(VueLodash, { name: 'custom', lodash: lodash })
 

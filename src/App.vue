@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app color="#222" dark>
-      <div class="d-flex align-center">
+      <div class="d-flex align-center mr-3">
         <v-img
           alt="Vuetify Logo"
           class="shrink mr-2"
@@ -14,16 +14,8 @@
         <span>Stellar Asset Explorer</span>
       </div>
 
-      <v-spacer></v-spacer>
-
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
+      <v-btn text to="/" color="primary">Account Flow</v-btn>
+      <v-btn text to="/asset-flow" color="primary">Asset Flow</v-btn>
     </v-app-bar>
 
     <v-main>
